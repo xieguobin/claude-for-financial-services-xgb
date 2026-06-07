@@ -1,247 +1,236 @@
 ---
 name: china-pptx-author
-description: Create PowerPoint presentations for A-share investment analysis, pitch decks, and client reports. Adapts the original pptx-author skill for Chinese business presentation conventions, A-share content, and domestic data visualizations. Triggers on "A股PPT制作", "投资PPT", "create presentation China", "pitch deck slides", "制作PPT", or "PowerPoint [company/topic]".
+description: >
+  Generic PowerPoint authoring skill for A-share investment analysis and pitch decks.
+  Creates professional 路演PPT / 投资分析PPT for any A-share company using live data
+  from AkShare MCP tools. All company-specific values are parameterized — never hardcoded.
+  Triggers on "A股PPT制作", "投资PPT", "制作PPT", "路演PPT", "pitch deck",
+  "PowerPoint [company/ticker]", or any request to create slides for a Chinese stock.
+  When invoked, use the `generate_a_share_ppt` script with --company and --ticker args.
 ---
 
 # china-pptx-author
 
 ## Purpose
 
-Create professional **A股投资分析PPT** — structured PowerPoint presentations for Chinese equity research, client meetings, and IC presentations.
+Generate professional **A股投资分析PPT** for any listed company.
+This skill is a generic engine — every output is driven by two parameters:
 
-## Data Sources
+| Parameter | Example | Description |
+|-----------|---------|-------------|
+| `{{COMPANY_NAME}}` | 贵州茅台 | Full Chinese company name |
+| `{{TICKER}}` | 600519 | 6-digit A-share code (no exchange prefix) |
+| `{{OUTPUT_PATH}}` | ./output.pptx | Where to save the PPTX file |
 
-### Primary: AkShare MCP
+All financial figures, price data, peer valuations, and company descriptions are
+fetched live from AkShare / public APIs. **Nothing is hardcoded.**
+
+---
+
+## Data Pipeline
+
+### Step 1: Resolve Company Info
 
 ```python
-get_index_data("000001")              → Market overview charts
-get_quote(ticker)                     → Price charts
-get_industry_stocks(industry="...")    → Peer comparison charts
+# MCP tool: search_stock
+search_stock(keyword="{{COMPANY_NAME}}")
+# → confirms ticker, exchange (SH/SZ), full legal name
 ```
 
-### Secondary Sources
-- 巨潮 — company data for charts
-- Wind / Choice — professional charts
-- Research team — market data
-
-## Workflow
-
-### Step 1: Define Presentation Purpose
-
-**Common presentation types:**
-
-| Type | Audience | Length | Key Content |
-|------|----------|--------|-------------|
-| 深度报告 (Deep dive) | Internal IC | 30-50 slides | Full analysis |
-| 首次覆盖 (Initiation) | Internal | 20-30 slides | Company overview + thesis |
-| 行业研究 (Sector) | Internal | 15-25 slides | Industry overview |
-| 客户路演 (Roadshow) | Clients | 15-20 slides | Investment thesis |
-| 晨会汇报 (Morning meeting) | Internal | 5-10 slides | Daily strategy |
-| IC汇报 (IC presentation) | Investment committee | 20-30 slides | Investment case |
-
-### Step 2: Structure the Deck
-
-**Standard A-share research deck structure:**
-
-```
-1. 投资摘要 (Investment Summary) — 1 slide
-2. 投资逻辑 (Investment Thesis) — 1-2 slides
-3. 公司概览 (Company Overview) — 2-3 slides
-4. 行业分析 (Industry Analysis) — 3-5 slides
-5. 财务分析 (Financial Analysis) — 3-5 slides
-6. 盈利预测 (Earnings Forecast) — 2-3 slides
-7. 估值分析 (Valuation) — 2-3 slides
-8. 风险提示 (Risk Factors) — 1 slide
-9. 投资建议 (Recommendation) — 1 slide
+```python
+# MCP tool: get_quote
+get_quote(ticker="{{TICKER}}")
+# → live price, PE, PB, market cap, turnover, 52-week range
 ```
 
-### Step 3: Design Standards
+```python
+# MCP tool: get_financials
+get_financials(ticker="{{TICKER}}", statement_type="income", period="annual")
+# → annual income statement: revenue, net profit, margins, EPS, etc.
+get_financials(ticker="{{TICKER}}", statement_type="balance", period="annual")
+# → balance sheet: assets, liabilities, equity
+get_financials(ticker="{{TICKER}}", statement_type="cashflow", period="annual")
+# → cash flow statement
+```
 
-**Chinese business presentation design:**
+```python
+# MCP tool: get_historical_data
+get_historical_data(ticker="{{TICKER}}", frequency="weekly", start_date="{{START_DATE}}", end_date="{{END_DATE}}")
+# → OHLCV price history for trend charts
+```
+
+```python
+# MCP tool: get_industry_stocks
+get_industry_stocks(industry="{{INDUSTRY_NAME}}")
+# → peer companies in the same sector for comps analysis
+```
+
+### Step 2: Fetch Peer Data
+
+```python
+# For each peer returned by get_industry_stocks, call get_quote to get PE/PB
+# Focus on top 5-8 comparable companies by revenue/market cap
+```
+
+### Step 3: Generate Charts
+
+Use matplotlib to create:
+1. **Revenue & Profit trend** — from `get_financials(income)`
+2. **Margin trends** — gross margin, net margin, ROE over time
+3. **Growth rates** — YoY revenue and profit growth
+4. **Peer comparison** — horizontal bar chart of PE and PB vs peers
+5. **Price trend** — from `get_historical_data`
+6. **Valuation range** — football field based on peer PE distribution
+
+All chart titles and labels must include `{{COMPANY_NAME}}` dynamically.
+
+---
+
+## Presentation Structure
+
+The default deck is **12 slides**. Adjust sections based on `deck_type` parameter.
+
+### Template (parameterized)
+
+```
+Slide 1:  Cover
+    {{COMPANY_NAME}} ({{TICKER}}.{{EXCHANGE}})
+    {{REPORT_TITLE}}  |  {{DATE}}
+    机密文件 | 仅供内部参考
+
+Slide 2:  投资摘要 (Investment Highlights)
+    • {{HIGHLIGHT_1}}
+    • {{HIGHLIGHT_2}}
+    • {{HIGHLIGHT_3}}
+    目标价: ¥{{TARGET_PRICE_LOW}} - ¥{{TARGET_PRICE_HIGH}}
+    评级: {{RATING}}
+
+Slide 3:  公司概览 (Company Overview)
+    {{COMPANY_DESCRIPTION}}
+    主营业务: {{MAIN_BUSINESS}}
+    成立时间 | 上市板块 | 控股股东 (all from search_stock / get_quote)
+
+Slide 4:  行业分析 (Industry Overview)
+    {{INDUSTRY_NAME}} — market size, trends, policy
+    Data from: get_industry_stocks result analysis
+
+Slide 5:  财务分析 (Financial Summary)
+    [Chart: Revenue & Profit]  [Chart: Margin Trends]
+    [Chart: Growth Rates]
+    All data from get_financials(income, annual)
+
+Slide 6:  运营指标 (Operating Metrics)
+    Segment breakdown, KPIs (if available from financials)
+
+Slide 7:  可比公司估值 (Trading Comparables)
+    [Chart: Peer PE/PB comparison]
+    Table: Peer | Market Cap | P/E | P/B | EV/EBITDA
+
+Slide 8:  估值分析 (Valuation)
+    [Chart: Football field]
+    DCF / PE / PB ranges derived from peer analysis
+
+Slide 9:  投资逻辑 (Investment Thesis)
+    3-5 key investment bullets derived from data analysis
+
+Slide 10: 风险提示 (Risk Factors)
+    Generic risk categories, customized from industry context
+
+Slide 11: 投资建议 (Recommendation)
+    评级 + 目标价 range + upside calculation
+
+Slide 12: 免责声明 (Disclaimer)
+    Standard A-share research disclaimer
+```
+
+### Deck Type Variants
+
+| deck_type | Slides | Audience | Key sections |
+|-----------|--------|----------|--------------|
+| `pitch` | 12 | Clients/Investors | Full deck above |
+| `deep_dive` | 20-30 | Internal IC | Add: detailed financial model, sensitivity, scenario analysis |
+| `initiation` | 15-20 | Internal | Emphasize: company overview, industry, thesis |
+| `sector` | 10-15 | Internal | Emphasize: industry analysis, peer comparison |
+| `morning_note` | 5-8 | Internal | Condensed: key data, thesis, recommendation |
+
+---
+
+## Design Standards
 
 | Element | Standard |
 |---------|----------|
-| 模板 | Firm template (corporate colors) |
-| 字体 | 微软雅黑 / 思源黑体 (preferred) |
-| 字号 | Title 32-44pt, Body 18-24pt |
-| 配色 | Blue (primary), gray (secondary) |
-| Logo | Firm logo top-right, company logo |
+| 模板 | Corporate blue/gold theme (configurable) |
+| 字体 | 微软雅黑 / system default sans-serif |
+| 字号 | Title 24-32pt, Body 12-16pt |
+| 配色 | Primary: #1A3C6E (deep blue), Accent: #C8A032 (gold) |
+| 每页标题 | Chinese + English bilingual |
+| 数据来源 | Cite at bottom of each data slide |
 | 页码 | Bottom center |
-| 日期 | Footer |
-| 免责声明 | Last slide |
+| 免责声明 | Last slide, mandatory |
 
-### Step 4: Content Guidelines
+---
 
-**Slide content rules:**
+## Content Rules
 
 | Rule | Guideline |
 |------|-----------|
 | 每页一个主题 | One idea per slide |
-| 标题先行 | Clear headline at top |
+| 标题先行 | Clear headline at top of every slide |
 | 数据可视化 | Charts > tables > text |
-| 中文为主 | Primary language Chinese |
-| 术语统一 | Consistent terminology |
-| 数据来源 | Cite data source at bottom |
+| 中文为主 | Primary language Chinese, with English subtitles |
+| 术语统一 | Use standard A-share terminology (see below) |
+| 不编造数据 | If data unavailable from API, show "N/A" or omit |
 
-### Step 5: Common Slide Types
+### A-Share Terminology
 
-**Slide templates:**
-
-**Cover slide:**
-```
-[Company Logo]
-[公司名称]
-[报告标题]
-[分析师] | [日期]
-[机构名称]
-```
-
-**Executive summary:**
-```
-投资摘要
-
-核心观点:
-• [Point 1]
-• [Point 2]
-• [Point 3]
-
-目标价: ¥XX (X% upside)
-评级: [买入/增持/中性/减持]
-```
-
-**Financial chart:**
-```
-营业收入及增长
-
-[Bar + line chart]
-• 柱状图: 营业收入 (亿元)
-• 折线图: 同比增长率 (%)
-
-数据来源: 公司年报, AkShare
-```
-
-**Peer comparison:**
-```
-可比公司估值比较
-
-[Table]
-公司 | 市值(亿) | P/E | P/B | P/S | EV/EBITDA
-
-数据来源: AkShare, Wind
-```
-
-**Valuation:**
-```
-估值与目标价
-
-[Football field chart]
-目标价: ¥XX - ¥XX
-当前价: ¥XX
-上行空间: X%
-
-[Methodology table]
-```
-
-### Step 6: Chart Standards
-
-**Chart types for A-share presentations:**
-
-| Chart | Use | Tool |
-|-------|-----|------|
-| 柱状图 (Bar) | Revenue, profit comparison | Excel embedded |
-| 折线图 (Line) | Trends, growth rates | Excel embedded |
-| 饼图 (Pie) | Market share, allocation | Excel embedded |
-| 瀑布图 (Waterfall) | Earnings bridge | Excel embedded |
-| 足球场 (Football field) | Valuation range | Excel embedded |
-| 股价走势 (Stock chart) | Price history | Excel embedded |
-| 散点图 (Scatter) | Comps analysis | Excel embedded |
-
-**Chart formatting:**
-- Title clear and descriptive
-- Axis labels in Chinese
-- Data labels where appropriate
-- Source cited at bottom
-- Consistent colors across deck
-
-### Step 7: Regulatory Slides
-
-**Required slides:**
-
-**Risk factors (风险提示):**
-```
-风险提示
-
-一、市场风险
-   股票价格受宏观经济、市场情绪等因素影响
-
-二、行业风险
-   行业政策变化、竞争加剧
-
-三、公司风险
-   经营风险、管理层变动、重大诉讼
-
-四、其他风险
-   [Specific risks]
-
-本报告仅供内部参考, 不构成投资建议。
-```
-
-**Disclaimer (免责声明):**
-```
-免责声明
-
-本报告由[机构]发布, 仅供内部参考, 不构成任何投资建议。
-报告中的信息来源于我们认为可靠的渠道, 但不保证其准确性。
-投资者应独立做出投资决策, 并承担相应风险。
-```
-
-### Step 8: Quality Checks
-
-Before finalizing:
-- [ ] All slides have titles
-- [ ] Data consistent across slides
-- [ ] Charts labeled and sourced
-- [ ] No typos or formatting errors
-- [ ] Consistent terminology
-- [ ] Regulatory slides included
-- [ ] File naming convention followed
-- [ ] Template applied correctly
-
-## China-Specific Considerations
-
-### Terminology
-
-| English | Chinese (Standard) |
-|---------|-------------------|
+| English | Chinese |
+|---------|---------|
 | Revenue | 营业收入 |
-| Net income | 归母净利润 |
+| Net income (attributable) | 归母净利润 |
 | Gross margin | 毛利率 |
-| EBITDA | EBITDA |
+| Net margin | 净利率 |
+| ROE | ROE (净资产收益率) |
 | EPS | 每股收益 |
-| ROE | ROE |
+| P/E | 市盈率 |
+| P/B | 市净率 |
 | Target price | 目标价 |
-| Rating | 评级 (买入/增持/中性/减持) |
+| Rating | 评级 |
 | Upside | 上行空间 |
+| YoY | 同比 |
+| QoQ | 环比 |
+| Market cap | 总市值 |
+| Turnover | 换手率 |
 
-### Common Presentation Conventions
+---
 
-| Convention | Practice |
-|-----------|----------|
-| 评级体系 | 买入/增持/中性/减持/卖出 |
-| 目标价 | 12-month target price |
-| 一致预期 | Consensus estimates |
-| 同比 | Year-over-year |
-| 环比 | Quarter-over-quarter |
-| 千万元 | Unit for large numbers |
+## Quality Checklist
 
-## Quality Checks
+Before delivering the PPT:
+- [ ] All `{{PLACEHOLDER}}` replaced with live data
+- [ ] Charts readable, labeled, sourced
+- [ ] Numbers consistent across slides (revenue matches across chart/table/text)
+- [ ] Company name and ticker correct throughout
+- [ ] Peer data reflects actual industry comparables
+- [ ] Disclaimer slide included
+- [ ] File named: `{{COMPANY_NAME}}_{{TICKER}}_{{REPORT_TITLE}}.pptx`
 
-Before delivering:
-- [ ] Purpose clearly defined
-- [ ] Structure appropriate
-- [ ] Content accurate
-- [ ] Design consistent
-- [ ] Data sourced
-- [ ] Charts clear
-- [ ] Regulatory slides included
-- [ ] No errors
+---
+
+## Usage
+
+Invoke the generation script:
+
+```bash
+python3 scripts/generate_a_share_ppt.py \
+  --company "{{COMPANY_NAME}}" \
+  --ticker "{{TICKER}}" \
+  --industry "{{INDUSTRY_NAME}}" \
+  --output "{{OUTPUT_PATH}}" \
+  --type {{DECK_TYPE}} \
+  --title "{{REPORT_TITLE}}"
+```
+
+Required args: `--company`, `--ticker`
+Optional: `--industry` (for peer lookup), `--output`, `--type` (pitch/deep_dive/initiation), `--title`
+
+If `--industry` is omitted, the script attempts to infer it from the company's sector classification.
