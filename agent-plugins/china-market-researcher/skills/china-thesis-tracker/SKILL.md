@@ -17,7 +17,8 @@ Track and maintain **A股投资逻辑/thesis** for portfolio positions and watch
 get_quote(ticker)                        → Current price, valuation
 get_historical_data(ticker)             → Price trajectory
 get_financials(ticker, "income")         → Financial performance
-get_stock_news(ticker)                   → News affecting thesis
+# News (china-news MCP — separate server)
+get_stock_news(ticker="{{TICKER}}")          → News affecting thesis
 get_industry_stocks(industry="...")      → Peer context
 ```
 

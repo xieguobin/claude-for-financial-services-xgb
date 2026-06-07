@@ -41,10 +41,10 @@ get_industry_stocks(industry="白酒")
 
 | Tier | Description | Examples |
 |------|-------------|---------|
-| Tier 1 (龙头) | Market leaders, >10% share | 贵州茅台 (白酒) |
-| Tier 2 (挑战者) | Strong #2-5, growing share | 五粮液, 泸州老窖 |
-| Tier 3 (跟随者) | Niche players, regional | 区域名酒 |
-| Tier 4 (边缘) | Declining or niche | 小酒厂 |
+| Tier 1 (龙头) | Market leaders, >10% share | {{SECTOR_LEADER}} ({{EXAMPLE_SECTOR}}) |
+| Tier 2 (挑战者) | Strong #2-5, growing share | {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| Tier 3 (跟随者) | Niche players, regional | {{NICH_PLAYER}} |
+| Tier 4 (边缘) | Declining or niche | {{LOW_END_PLAYER}} |
 
 ### Step 2: Competitive Comparison Matrix
 
@@ -86,13 +86,13 @@ For 2x2 matrices, use:
 - X-axis: Price (价格) or Scale (规模)
 - Y-axis: Quality (品质) or Growth (增速)
 
-Example for 白酒:
+Example for {{EXAMPLE_SECTOR}}:
 ```
          高端/品质
            |
-   茅台    |   五粮液/泸州老窖
+   {{SECTOR_LEADER}}    |   {{CHALLENGER_1}}/{{CHALLENGER_2}}
            |
-   区域名酒 |   泛全国化品牌
+   {{NICH_PLAYER}} |   {{NATIONAL_BRAND}}
            |
            |________________
               低端/性价比    高端/溢价

@@ -202,7 +202,8 @@ Output: Event-driven opportunities
 
 | Rank | Ticker | Company | Sector | Idea Type | Thesis | Catalyst | Risk | Conviction |
 |------|--------|---------|-------|-----------|--------|----------|------|------------|
-| 1 | 600519 | 贵州茅台 | 白酒 | Long | 批价稳+动销旺+分红高 | Q1业绩超预期 | 批价下行 | High |
+| {{RANK}} | {{TICKER}} | {{COMPANY_NAME}} | {{SECTOR}} | {{DIRECTION}} | {{THESIS}} | {{CATALYST}} | {{RISK}} | {{CONVICTION}} |
+| Example | 600519 | 贵州茅台 | 白酒 | Long | 批价稳+动销旺+分红高 | Q1业绩超预期 | 批价下行 | High |
 | 2 | ... | ... | ... | ... | ... | ... | ... | ... |
 
 **Conviction levels:**

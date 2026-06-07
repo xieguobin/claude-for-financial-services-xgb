@@ -18,8 +18,8 @@ This skill is a generic engine — every output is driven by two parameters:
 
 | Parameter | Example | Description |
 |-----------|---------|-------------|
-| `{{COMPANY_NAME}}` | 贵州茅台 | Full Chinese company name |
-| `{{TICKER}}` | 600519 | 6-digit A-share code (no exchange prefix) |
+| `{{COMPANY_NAME}}` | {{COMPANY_NAME}} | Full Chinese company name (e.g., 贵州茅台) |
+| `{{TICKER}}` | {{TICKER}} | 6-digit A-share code (e.g., 600519) |
 | `{{OUTPUT_PATH}}` | ./output.pptx | Where to save the PPTX file |
 
 All financial figures, price data, peer valuations, and company descriptions are
@@ -218,10 +218,10 @@ Before delivering the PPT:
 
 ## Usage
 
-Invoke the generation script:
+Invoke the generation script (from project root):
 
 ```bash
-python3 scripts/generate_a_share_ppt.py \
+cd {{PROJECT_ROOT}} && python3 scripts/generate_a_share_ppt.py \
   --company "{{COMPANY_NAME}}" \
   --ticker "{{TICKER}}" \
   --industry "{{INDUSTRY_NAME}}" \

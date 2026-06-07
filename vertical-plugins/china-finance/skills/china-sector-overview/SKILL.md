@@ -18,7 +18,8 @@ get_industry_stocks(industry="白酒")     → 板块成分股
 get_quote(ticker)                        → 个股行情、估值
 get_financials(ticker, "income")         → 财务数据对比
 get_index_data("000001")                 → 大盘基准
-get_stock_news(ticker="")                → 行业新闻
+# News (china-news MCP — separate server)
+get_stock_news(ticker="{{TICKER}}")          → 行业新闻
 get_market_overview()                    → 涨幅榜/成交额榜
 ```
 

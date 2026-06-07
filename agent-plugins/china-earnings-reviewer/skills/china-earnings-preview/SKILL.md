@@ -17,7 +17,8 @@ Build **A股季报/年报前瞻分析**, preparing for company earnings releases
 get_quote(ticker)                        → Current valuation, PE/PB
 get_historical_data(ticker)              → Trading context, 52-wk range
 get_financials(ticker, "income", "annual")  → Historical revenue/EPS trends
-get_stock_news(ticker)                   → Pre-earnings context
+# News (china-news MCP — separate server)
+get_stock_news(ticker="{{TICKER}}")          → Pre-earnings context
 get_industry_stocks(industry="...")      → Peer trading multiples
 ```
 

@@ -20,7 +20,8 @@ get_financials(ticker, "balance", "quarterly")  → 资产负债表
 get_financials(ticker, "cashflow", "quarterly") → 现金流量表
 get_quote(ticker)                               → 实时行情, PE/PB
 get_historical_data(ticker)                     → 股价表现
-get_stock_news(ticker)                          → 相关新闻
+# News (china-news MCP — separate server)
+get_stock_news(ticker="{{TICKER}}")          → 相关新闻
 ```
 
 ### Secondary Sources
@@ -235,7 +236,7 @@ Based on current quarter results and management guidance:
 
 ```
 Source: 巨潮资讯, [Company] 2024 年年度报告, p.[X], [URL if applicable]
-Source: AkShare, get_financials(ticker="600519", statement_type="income", period="quarterly")
+Source: AkShare, get_financials(ticker="{{TICKER}}", statement_type="income", period="quarterly")
 Source: 慧博投研, [Company] 盈利预测, accessed [Date]
 Source: 同花顺 iFinD, 一致预期数据, accessed [Date]
 ```

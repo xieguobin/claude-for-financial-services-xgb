@@ -35,20 +35,20 @@ The **china-news** MCP server provides:
 ### 1. Identify the stock/security
 
 Use `search_stock(keyword)` to find the stock code if the user provides a company name in Chinese or English. AkShare codes are:
-- A-shares: 6-digit code (e.g., "600519" for 贵州茅台, "000001" for 平安银行)
+- A-shares: 6-digit code (e.g., "{{TICKER}}" for {{COMPANY_NAME}})
 - SH main board codes start with 6, SZ main board with 00, 创业板 with 30, 科创板 with 688
 
 ### 2. Pull market data
 
 ```python
 # Real-time quote
-get_quote(ticker="600519")
+get_quote(ticker="{{TICKER}}")
 
 # Historical prices (adjusted forward)
-get_historical_data(ticker="600519", start_date="20230101", end_date="20231231", frequency="daily")
+get_historical_data(ticker="{{TICKER}}", start_date="{{START_DATE}}", end_date="{{END_DATE}}", frequency="daily")
 
 # Financial statements
-get_financials(ticker="600519", statement_type="income", period="annual")
+get_financials(ticker="{{TICKER}}", statement_type="income", period="annual")
 # statement_type: "income" | "balance" | "cashflow"
 # period: "annual" | "quarterly"
 ```
@@ -69,7 +69,7 @@ get_index_data(index_code="000001")  # 上证指数
 ### 4. News and sentiment
 
 ```python
-get_stock_news(ticker="600519")
+get_stock_news(ticker="{{TICKER}}")
 get_market_headlines(top_n=20)
 ```
 

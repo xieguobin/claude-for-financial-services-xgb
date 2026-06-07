@@ -121,7 +121,7 @@ get_industry_stocks(industry="...")    → Updated peer data
 **File naming:**
 ```
 [Ticker]_[Company]_[ReportType]_v[X.X]_[YYYYMMDD].pptx
-Example: 600519_贵州茅台_深度研究_v2.1_20240605.pptx
+Example: {{TICKER}}_{{COMPANY_NAME}}_{{REPORT_TITLE}}_v2.1_20240605.pptx
 ```
 
 ### Step 7: Quality Assurance

@@ -108,8 +108,8 @@ Identify the stocks and sectors to track. Typical A-share coverage universe:
   "date": "2024-04-25",
   "type": "earnings",
   "subtype": "季报",
-  "ticker": "600519",
-  "company": "贵州茅台",
+  "ticker": "{{TICKER}}",
+  "company": "{{COMPANY_NAME}}",
   "importance": "high",
   "notes": "Q1 2024 results; watch 批价 and inventory",
   "status": "confirmed"
@@ -199,8 +199,8 @@ After catalyst passes:
 
 | Date | Company | Event | Importance | Watch Item |
 |------|---------|-------|------------|------------|
-| 04-25 | 贵州茅台 (600519) | Q1 年报 | Critical | 批价, 动销 |
-| 04-28 | 宁德时代 (300750) | Q1 季报 | High | 动力电池装机, 海外收入 |
+| {{DATE}} | {{COMPANY_NAME}} ({{TICKER}}) | {{EVENT_TYPE}} | {{IMPORTANCE}} | {{WATCH_ITEMS}} |
+| Example | 贵州茅台 (600519) | Q1 年报 | Critical | 批价, 动销 |
 | 04-30 | 工信部 | 新能源车月度数据 | Medium | 销量, 渗透率 |
 
 ## China-Specific Considerations

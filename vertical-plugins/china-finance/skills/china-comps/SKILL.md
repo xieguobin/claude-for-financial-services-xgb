@@ -11,18 +11,18 @@ description: Comparable company analysis for A-share stocks. Uses the AkShare MC
 
 Start with the target stock, then use `get_industry_stocks(industry="<行业名称>")` to get the full peer set for that industry. Common industry names used in the 东方财富 classification:
 
-| Industry | Examples |
-|----------|----------|
-| 白酒 | 贵州茅台, 五粮液, 泸州老窖 |
-| 半导体 | 中芯国际, 北方华创, 韦尔股份 |
-| 电池 | 宁德时代, 亿纬锂能, 国轩高科 |
-| 银行 | 招商银行, 工商银行, 建设银行 |
-| 证券 | 中信证券, 华泰证券, 东方财富 |
-| 保险 | 中国平安, 中国人寿, 中国太保 |
-| 医疗器械 | 迈瑞医疗, 联影医疗, 乐普医疗 |
-| 光伏设备 | 隆基绿能, 阳光电源, 通威股份 |
-| 汽车整车 | 比亚迪, 长城汽车, 上汽集团 |
-| 软件开发 | 科大讯飞, 用友网络, 金山办公 |
+| Industry | Example Leaders |
+|----------|-----------------|
+| 白酒 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 半导体 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 电池 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 银行 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 证券 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 保险 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 医疗器械 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 光伏设备 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 汽车整车 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
+| 软件开发 | {{SECTOR_LEADER}}, {{CHALLENGER_1}}, {{CHALLENGER_2}} |
 
 ### 2. Pull financial data for each peer
 

@@ -174,8 +174,9 @@ get_stock_info(ticker)               → Company info
 # Funds
 get_fund_data(fund_code)             → Fund data
 
-# News
-get_stock_news(ticker="")            → Market news
+# News (china-news MCP — separate server)
+get_stock_news(ticker="{{TICKER}}")         → Individual stock news
+get_market_headlines(top_n=20)              → Market headlines
 ```
 
 ### Step 8: Common Patterns
