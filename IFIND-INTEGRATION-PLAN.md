@@ -119,62 +119,99 @@ mcp-servers/
 - 架构：Python FastMCP 封装万得远程 JSON-RPC 2.0 API
 - 基地址：`https://mcp.wind.com.cn`
 - 认证：`Authorization: Bearer <WIND_API_KEY>`（Key 格式以 `ak_` 开头）
-- 工具数：44 个，覆盖 8 大服务域
+- 工具数：44 个，覆盖 8 大服务域（stock_data 10 + global_stock_data 10 + fund_data 10 + index_data 6 + bond_data 4 + financial_docs 2 + economic_data 1 + analytics_data 1）
 - SSE 默认端口：8003
 - 密钥申请：https://aifinmarket.wind.com.cn/#/home
 
 ### 工具映射表
 
-| MCP 工具名 | server_type | 功能 |
-|-----------|-------------|------|
-| `wind_search_stocks` | stock_data | A股智能选股 |
-| `wind_get_stock_info` | stock_data | 股票基本资料/行情 |
-| `wind_get_stock_financials` | stock_data | 财务报表/指标 |
-| `wind_get_stock_shareholders` | stock_data | 股东/机构 |
-| `wind_get_stock_events` | stock_data | 公司事件 |
-| `wind_get_stock_consensus` | stock_data | 一致预期 |
-| `wind_get_stock_technical` | stock_data | 技术指标 |
-| `wind_get_stock_summary` | stock_data | 股票信息摘要 |
-| `wind_search_global_stocks` | global_stock_data | 港美股搜索 |
-| `wind_get_global_stock_info` | global_stock_data | 港美股行情 |
-| `wind_get_global_stock_financials` | global_stock_data | 港美股财务 |
-| `wind_get_global_stock_events` | global_stock_data | 港美股事件 |
-| `wind_compare_global_stocks` | global_stock_data | 跨市场对比 |
-| `wind_search_funds` | fund_data | 基金搜索 |
-| `wind_get_fund_info` | fund_data | 基金资料 |
-| `wind_get_fund_nav` | fund_data | 基金净值 |
-| `wind_get_fund_portfolio` | fund_data | 基金持仓 |
-| `wind_compare_funds` | fund_data | 基金对比 |
-| `wind_get_fund_performance_attribution` | fund_data | 业绩归因 |
-| `wind_search_indices` | index_data | 指数搜索 |
-| `wind_get_index_info` | index_data | 指数行情 |
-| `wind_get_index_constituents` | index_data | 指数成分股 |
-| `wind_get_index_weights` | index_data | 指数权重 |
-| `wind_compare_indices` | index_data | 指数对比 |
-| `wind_search_bonds` | bond_data | 债券搜索 |
-| `wind_get_bond_info` | bond_data | 债券行情 |
-| `wind_get_bond_rating` | bond_data | 信用评级 |
-| `wind_get_bond_yield` | bond_data | 到期收益 |
-| `wind_get_bond_spread` | bond_data | 利差分析 |
-| `wind_search_research` | financial_docs | 研报搜索 |
-| `wind_get_announcements` | financial_docs | 公告查询 |
-| `wind_get_financial_report` | financial_docs | 财报原文 |
-| `wind_get_prospectus` | financial_docs | 招股书 |
-| `wind_get_credit_report` | financial_docs | 评级报告 |
-| `wind_search_economic_indicators` | economic_data | 宏观指标搜索 |
-| `wind_get_economic_data` | economic_data | 宏观数据下载 |
-| `wind_compare_economic_data` | economic_data | 国别对比 |
-| `wind_get_economic_forecast` | economic_data | 预测数据 |
-| `wind_get_leading_indicators` | economic_data | 领先指标 |
-| `wind_factor_analysis` | analytics_data | 因子分析 |
-| `wind_backtest` | analytics_data | 回测 |
-| `wind_risk_model` | analytics_data | 风险模型 |
-| `wind_portfolio_optimization` | analytics_data | 组合优化 |
-| `wind_scenario_analysis` | analytics_data | 情景分析 |
+#### stock_data — A 股 (10 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_search_stocks` | `search_stocks` | A股智能选股筛选 |
+| `wind_get_stock_price_indicators` | `get_stock_price_indicators` | 最新行情快照（最新价、涨跌幅、换手率等） |
+| `wind_get_stock_kline` | `get_stock_kline` | 历史K线（日/周/月，复权方式可选） |
+| `wind_get_stock_quote` | `get_stock_quote` | 日内分钟行情 |
+| `wind_get_stock_basicinfo` | `get_stock_basicinfo` | 公司档案、主营、行业、IPO、上市板 |
+| `wind_get_stock_fundamentals` | `get_stock_fundamentals` | 财务数据：盈利、资产负债、现金流、增长率 |
+| `wind_get_stock_equity_holders` | `get_stock_equity_holders` | 股本、前十大股东、实控人、限售 |
+| `wind_get_stock_events` | `get_stock_events` | 重大事件：IPO、增发、并购、ST、分红 |
+| `wind_get_stock_technicals` | `get_stock_technicals` | 技术指标：MACD、KDJ、RSI、BOLL、融资融券 |
+| `wind_get_risk_metrics` | `get_risk_metrics` | 风险指标：Beta、Alpha、波动率、Sharpe、VaR |
+
+#### global_stock_data — 港股/美股 (10 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_search_global_stocks` | `search_global_stocks` | 港股/美股智能选股筛选 |
+| `wind_get_global_stock_price_indicators` | `get_global_stock_price_indicators` | 最新行情快照 |
+| `wind_get_global_stock_kline` | `get_global_stock_kline` | 历史K线 |
+| `wind_get_global_stock_quote` | `get_global_stock_quote` | 日内分钟行情 |
+| `wind_get_global_stock_basicinfo` | `get_global_stock_basicinfo` | 公司档案、注册地、经营范围、指数成份 |
+| `wind_get_global_stock_fundamentals` | `get_global_stock_fundamentals` | 财务数据：盈利、PE/PB/PS、营收、历史分位 |
+| `wind_get_global_stock_equity_holders` | `get_global_stock_equity_holders` | 股本、主要股东、机构持仓、限售解禁 |
+| `wind_get_global_stock_events` | `get_global_stock_events` | 重大事件：IPO、增发、并购、监管、分红 |
+| `wind_get_global_stock_technicals` | `get_global_stock_technicals` | 技术指标：多周期涨跌幅、MACD、KDJ、RSI |
+| `wind_get_global_stock_risk_metrics` | `get_global_stock_risk_metrics` | 风险指标：Beta、Alpha、波动率、Sharpe、VaR |
+
+#### fund_data — 基金/ETF/LOF (10 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_search_funds` | `search_funds` | 全市场基金产品筛选 |
+| `wind_get_fund_price_indicators` | `get_fund_price_indicators` | 最新行情快照（净值、IOPV、贴水率） |
+| `wind_get_fund_kline` | `get_fund_kline` | 历史K线 |
+| `wind_get_fund_quote` | `get_fund_quote` | 日内分钟行情 |
+| `wind_get_fund_info` | `get_fund_info` | 基金档案、费率、经理、风格、业绩基准 |
+| `wind_get_fund_financials` | `get_fund_financials` | 财务数据：利润、净值、收入、费用、分红 |
+| `wind_get_fund_holdings` | `get_fund_holdings` | 重仓股、资产配置、行业配置 |
+| `wind_get_fund_performance` | `get_fund_performance` | 业绩、排名、ETF/二级交易表现 |
+| `wind_get_fund_holders` | `get_fund_holders` | 持有人结构、申赎情况、规模变动 |
+| `wind_get_fund_company_info` | `get_fund_company_info` | 基金管理公司档案、经理团队 |
+
+#### index_data — 指数/板块 (6 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_get_index_price_indicators` | `get_index_price_indicators` | 最新行情快照（涨跌家数、成分股贡献点数） |
+| `wind_get_index_kline` | `get_index_kline` | 历史K线 |
+| `wind_get_index_quote` | `get_index_quote` | 日内分钟行情 |
+| `wind_get_index_basicinfo` | `get_index_basicinfo` | 指数档案：发布机构、基日、基点、成份数量 |
+| `wind_get_index_fundamentals` | `get_index_fundamentals` | 基本面：PE/PB/PS、营收、利润、历史分位 |
+| `wind_get_index_technicals` | `get_index_technicals` | 技术指标：多周期涨跌幅、MACD、RSI |
+
+#### bond_data — 债券 (4 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_get_bond_basicinfo` | `get_bond_basicinfo` | 债券档案：发行规模、票面利率、期限、兑付 |
+| `wind_get_bond_issuer_info` | `get_bond_issuer_info` | 发债主体信息：名称、注册地、行业、股权结构 |
+| `wind_get_bond_market_data` | `get_bond_market_data` | 市场数据：报价、估价、溢价、久期、凸性、利差 |
+| `wind_get_bond_financial_data` | `get_bond_financial_data` | 发债主体财务：营收、利润、资产、负债 |
+
+#### financial_docs — 公告/新闻 (2 tools)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_get_company_announcements` | `get_company_announcements` | 公司官方公告：年报、季报、招股书等 |
+| `wind_get_financial_news` | `get_financial_news` | 第三方财经新闻、市场报道、政策动态 |
+
+#### economic_data — 宏观/行业 (1 tool)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_get_economic_data` | `get_economic_data` | 宏观或行业EDB指标数据（支持频率/量级/币种筛选） |
+
+#### analytics_data — 通用取数兜底 (1 tool)
+
+| MCP 工具名 | server-side tool_name | 功能 |
+|-----------|----------------------|------|
+| `wind_get_financial_data` | `get_financial_data` | 通用结构化取数兜底，在其他专项工具无法覆盖时使用 |
 
 ### 数据源优先级（更新后）
 
-1. **Wind** (Tier-0) — 全市场最全面金融数据，44 工具覆盖 8 大服务域
+1. **Wind** (Tier-0) — 全市场最全面金融数据，44 工具覆盖 8 大服务域（A股/港美股/基金/指数/债券/公告/宏观/分析）
 2. **iFind** (Tier-1) — 精确财务、宏观、债券、港美股、ESG
 3. **AkShare** (Tier-2) — 免费备选，基础行情/财报/行业/指数
 4. **china-news** (Tier-3) — 免费新闻和公告
@@ -193,3 +230,4 @@ mcp-servers/
 | 8 | 更新 check-china.py | `scripts/check-china.py` | ✅ 完成 |
 | 9 | 更新 README.md | `README.md` | ✅ 完成 |
 | 10 | 更新 SKILL.md 文件 | `vertical-plugins/*/skills/*/SKILL.md` | ✅ 完成 |
+| 11 | ✅ server.py v2.0: 按官方 tool-contracts.md 重新对齐 44 个工具名称、参数结构、服务域划分 | `mcp-servers/wind-mcp/server.py` | ✅ 完成 |

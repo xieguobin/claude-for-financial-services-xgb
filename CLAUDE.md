@@ -29,7 +29,7 @@ python3 mcp-servers/china-news-mcp/server.py
 All default to stdio transport. For deployment, use `--transport sse --port <PORT>`.
 
 **Data source priority:**
-1. **Wind MCP** (Tier-0 paid) — most comprehensive: A股/港美股/基金/指数/债券/宏观/研报/分析, 44 tools
+1. **Wind MCP** (Tier-0 paid, v2.0) — 44 tools across 8 domains: stock_data (10), global_stock_data (10), fund_data (10), index_data (6), bond_data (4), financial_docs (2), economic_data (1), analytics_data (1)
 2. **iFind MCP** (Tier-1 paid) — precise financials, macro/EDB, bonds, HK/US stocks, ESG
 3. **AkShare MCP** (Tier-2 free) — basic quotes, industry classification, indices
 4. **china-news MCP** (Tier-3 free) — news and announcements

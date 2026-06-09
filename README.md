@@ -319,14 +319,14 @@ Wind MCP 封装了万得的远程 MCP 服务，提供 **44 个工具**，覆盖 
 
 | 服务域 | 工具数 | 能力 |
 |---|---|---|
-| **stock_data** | 8 | A 股搜索、实时行情、历史K线、财务报表、一致预期、股东机构、公司事件、技术指标 |
-| **global_stock_data** | 5 | 港股/美股搜索、全球行情、跨国对比、ADR、GDR |
-| **fund_data** | 6 | 基金搜索、净值、持仓、经理、对比、业绩归因 |
-| **index_data** | 5 | 指数搜索、成分股、权重、行业分布、指数对比 |
-| **bond_data** | 5 | 债券搜索、行情、信用评级、到期收益、利差分析 |
-| **financial_docs** | 5 | 研报搜索、公告查询、财报原文、招股书、评级报告 |
-| **economic_data** | 5 | 宏观指标搜索、数据下载、国别对比、预测数据、领先指标 |
-| **analytics_data** | 5 | 因子分析、回测、风险模型、组合优化、情景分析 |
+| **stock_data** | 10 | A 股搜索、行情快照、K 线、分钟行情、基本档案、财务数据、股本股东、重大事件、技术指标、风险指标 |
+| **global_stock_data** | 10 | 港股/美股搜索、行情快照、K 线、分钟行情、基本档案、财务数据、股本股东、重大事件、技术指标、风险指标 |
+| **fund_data** | 10 | 基金搜索、行情快照、K 线、分钟行情、档案费率、财务、持仓、业绩排名、持有人、公司信息 |
+| **index_data** | 6 | 指数行情快照、K 线、分钟行情、基本档案、基本面、技术指标 |
+| **bond_data** | 4 | 债券档案、发债主体、市场数据、主体财务 |
+| **financial_docs** | 2 | 公司公告(年报/季报/招股书)、财经新闻 |
+| **economic_data** | 1 | 宏观/行业 EDB 指标(GDP/CPI/PPI/PMI/社融等) |
+| **analytics_data** | 1 | 通用结构化取数兜底 |
 
 #### 配置密钥
 
@@ -371,16 +371,16 @@ python3 mcp-servers/wind-mcp/server.py --transport sse --port 8003
 
 ```
 你：建一个宁德时代的 DCF 模型
-    → Claude 调用 wind_get_stock_financials("宁德时代") + wind_get_economic_data("中债10年期")
+    → Claude 调用 wind_get_stock_fundamentals("宁德时代") + wind_get_economic_data("中债10年期")
 
 你：帮我对比中美新能源车企估值
-    → Claude 调用 wind_compare_global_stocks("中美新能源车企估值对比")
+    → Claude 调用 wind_get_global_stock_snapshot("特斯拉") + wind_get_stock_snapshot("比亚迪")
 
-你：搜一下白酒行业的深度研报
-    → Claude 调用 wind_search_research("白酒行业深度研究")
+你：搜一下白酒行业的公司公告
+    → Claude 调用 wind_get_financial_docs("贵州茅台", doc_type="annual_report")
 
-你：沪深300动量因子近一年表现如何？
-    → Claude 调用 wind_factor_analysis("沪深300动量因子近一年")
+你：沪深300最近技术指标如何？
+    → Claude 调用 wind_get_index_technicals("000300.SH")
 ```
 
 当 Wind 不可用时，系统自动降级到 iFind (Tier-1) → AkShare (Tier-2)。可通过 `IFIND_DATA_SOURCE_MODE` 环境变量控制降级策略（`wind-only`, `wind-fallback`, `ifind-fallback`, `akshare-only`）。

@@ -32,23 +32,31 @@ description: Query A-share and Chinese financial market data via multiple data s
 
 | 场景 | Wind (Tier-0) | iFind (Tier-1 首选) | AkShare (Tier-2 备选) |
 |------|---------------|---------------------|----------------------|
-| 股票财务报表（利润表/资产负债表） | `wind_get_stock_financials` | `ifind_get_stock_financials` | `get_financials` |
-| 股票基本面/行情 | `wind_get_stock_info` | `ifind_get_stock_info` | `get_stock_info` / `get_quote` |
+| 股票财务报表（利润表/资产负债表） | `wind_get_stock_fundamentals` | `ifind_get_stock_financials` | `get_financials` |
+| 股票基本面/行情 | `wind_get_stock_basicinfo` | `ifind_get_stock_info` | `get_stock_info` / `get_quote` |
+| 股票行情快照（实时行情） | `wind_get_stock_price_indicators` | `ifind_get_stock_info` | `get_quote` |
+| 股票K线（OHLCV历史） | `wind_get_stock_kline` | — | `get_historical_data` |
+| 股票技术指标 | `wind_get_stock_technicals` | — | — |
 | 智能选股 | `wind_search_stocks` | `ifind_search_stocks` | `search_stock`（仅关键词） |
-| 股东/股本结构 | `wind_get_stock_shareholders` | `ifind_get_stock_shareholders` | — |
+| 股东/股本结构 | `wind_get_stock_equity_holders` | `ifind_get_stock_shareholders` | — |
 | 一致预期/估值 | `wind_get_stock_consensus` | — | — |
-| 风险指标（夏普/Beta/波动率） | `wind_risk_model` | `ifind_get_risk_indicators` | — |
+| 风险指标（夏普/Beta/波动率） | `wind_get_risk_metrics` | `ifind_get_risk_indicators` | — |
 | ESG 评级 | — | `ifind_get_esg_data` | — |
 | 基金资料/行情/持仓 | `wind_get_fund_*` | `ifind_search_funds` / `ifind_get_fund_*` | `get_fund_data` |
 | 宏观经济指标 | `wind_get_economic_data` | `ifind_search_edb` → `ifind_get_edb_data` | — |
-| 债券数据 | `wind_get_bond_*` | `ifind_bond_*` | — |
-| 港美股 | `wind_get_global_stock_*` | `ifind_*_global_stock*` | — |
+| 债券基本信息 | `wind_get_bond_basicinfo` | `ifind_bond_basic_info` | — |
+| 债券行情数据 | `wind_get_bond_market_data` | `ifind_bond_market_data` | — |
+| 港美股基本面 | `wind_get_global_stock_fundamentals` | `ifind_global_stock_financial` | — |
+| 港美股基本信息 | `wind_get_global_stock_basicinfo` | `ifind_global_stock_profile` | — |
 | 指数/板块 | `wind_get_index_constituents` | `ifind_index_data` / `ifind_sector_data` | `get_index_data` |
 | 新闻/公告 | `wind_get_announcements` | `ifind_search_news` / `ifind_search_notice` | `get_stock_news` |
+| 财经新闻 | `wind_get_financial_news` | `ifind_search_trending_news` | `get_market_headlines` |
+| 公司公告 | `wind_get_company_announcements` | `ifind_search_notice` | — |
 | 行业分类/成分股 | `wind_get_index_constituents` | `ifind_sector_data` | `get_industry_stocks` |
 | 市场概览（涨跌幅榜） | — | — | `get_market_overview` |
 | 研报搜索 | `wind_search_research` | — | — |
 | 因子/策略分析 | `wind_factor_analysis` / `wind_backtest` | — | — |
+| 兜底取数（通用数据查询） | `wind_get_financial_data` | — | — |
 
 > **Data Source Mode Switch (env var `IFIND_DATA_SOURCE_MODE`)**:
 > - `wind-only` (strict): Wind only, error if unavailable
